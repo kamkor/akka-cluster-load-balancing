@@ -14,7 +14,7 @@ class Consumer(val processingTimeMillis: Int) extends Actor with UnboundedStash 
     }
   }
 
-  private[this] def processing: Receive = {
+  def processing: Receive = {
     case data: Array[Int] => stash()
     case "endOfProcessing" => {
       unstashAll()
