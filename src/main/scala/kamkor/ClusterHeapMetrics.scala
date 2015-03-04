@@ -49,6 +49,6 @@ class ClusterHeapMetrics(name: String) {
     nodesHeapUse.values map (nHeapUse => if (nHeapUse.isEmpty) 0 else nHeapUse.sum / nHeapUse.length)
 
   private[this] def resetHeapUse(): Unit =
-    nodesHeapUse = nodesHeapUse.map { case (nodeAddress, heapUse) => nodeAddress -> Seq.empty }
+    nodesHeapUse = nodesHeapUse map { case (nodeAddress, heapUse) => nodeAddress -> Seq.empty }
 
 }
