@@ -36,19 +36,17 @@ class ClusterHeapMetrics(name: String) {
    * Logs to file current average heap use in mb for each consumer:
    * currentTimeMillis,consumer_1_avgheapuse,consumer_2_avgheapuse,..,consumer_n_avgheapuse
    *
-   * - Logs only when each consumer has at least one heap use statistic.
-   * - Consumers are sorted by their node address.
+   * Consumers are sorted by their node address.
    */
   def logHeapUse(): Unit = {
-      val nodesHeapUseAvgs = calculateNodesHeapUseAvgs
-      val log = System.currentTimeMillis + "," + nodesHeapUseAvgs.mkString(",") + "%n".format()
-      Files.write(metricsPath, log.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND)
-      resetHeapUse()
-    //}
+    val nodesHeapUseAvgs = calculateNodesHeapUseAvgs
+    val log = System.currentTimeMillis + "," + nodesHeapUseAvgs.mkString(",") + "%n".format()
+    Files.write(metricsPath, log.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND)
+    resetHeapUse()
   }
 
   private[this] def calculateNodesHeapUseAvgs =
-    nodesHeapUse.values map(nHeapUse => if (nHeapUse.isEmpty) 0 else nHeapUse.sum / nHeapUse.length)
+    nodesHeapUse.values map (nHeapUse => if (nHeapUse.isEmpty) 0 else nHeapUse.sum / nHeapUse.length)
 
   private[this] def resetHeapUse(): Unit =
     nodesHeapUse = nodesHeapUse.map { case (nodeAddress, heapUse) => nodeAddress -> Seq.empty }
