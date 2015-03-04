@@ -40,15 +40,15 @@ class ClusterHeapMetrics(name: String) {
    * - Consumers are sorted by their node address.
    */
   def logHeapUse(): Unit = {
-    if (hasHeapUseForAllNodes) {
-      val nodesHeapUseAvgs = nodesHeapUse.values map (nodeHeapUse => nodeHeapUse.sum / nodeHeapUse.length)
+      val nodesHeapUseAvgs = calculateNodesHeapUseAvgs
       val log = System.currentTimeMillis + "," + nodesHeapUseAvgs.mkString(",") + "%n".format()
       Files.write(metricsPath, log.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND)
       resetHeapUse()
-    }
+    //}
   }
 
-  private[this] def hasHeapUseForAllNodes: Boolean = !nodesHeapUse.valuesIterator.exists(_.isEmpty)
+  private[this] def calculateNodesHeapUseAvgs =
+    nodesHeapUse.values map(nHeapUse => if (nHeapUse.isEmpty) 0 else nHeapUse.sum / nHeapUse.length)
 
   private[this] def resetHeapUse(): Unit =
     nodesHeapUse = nodesHeapUse.map { case (nodeAddress, heapUse) => nodeAddress -> Seq.empty }

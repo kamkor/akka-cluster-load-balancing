@@ -5,7 +5,7 @@ import scala.concurrent.duration.DurationInt
 import akka.actor.{ Actor, Props }
 import akka.routing.FromConfig
 
-class Producer(sendIntervalMillis: Int, val dataArraySize: Int) extends Actor {
+class Producer(val sendIntervalMillis: Int, val dataArraySize: Int) extends Actor {
 
   import context.dispatcher
   context.system.scheduler.schedule(1.second, sendIntervalMillis.millis, self, "send")
