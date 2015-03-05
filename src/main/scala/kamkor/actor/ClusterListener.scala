@@ -2,22 +2,24 @@ package kamkor.actor
 
 import scala.collection.immutable.HashSet
 import scala.concurrent.duration.DurationInt
-
 import akka.actor.{ Actor, Props }
 import akka.cluster.Cluster
 import akka.cluster.ClusterEvent.MemberUp
 import akka.cluster.metrics.{ ClusterMetricsChanged, ClusterMetricsExtension, NodeMetrics }
 import akka.cluster.metrics.StandardMetrics.HeapMemory
-import kamkor.{ ClusterHeapMetrics, ConsumerApp }
+import kamkor.{ ConsumerApp }
+import kamkor.metrics.{ ClusterHeapMetrics, MetricsLogger }
 
 class ClusterListener(metricsIntervalSeconds: Int) extends Actor {
 
+  import context.dispatcher
   context.system.scheduler.schedule(
-    1.seconds, metricsIntervalSeconds.seconds, self, "logConsumersHeapUse")(context.dispatcher)
+    metricsIntervalSeconds.seconds, metricsIntervalSeconds.seconds, self, "logConsumersHeapUse")
 
   private[this] val cluster = Cluster(context.system)
-  private[this] val clusterHeapMetrics =
-    new ClusterHeapMetrics(name = cluster.selfAddress.port.getOrElse(0).toString())
+  private[this] val metricsLogger =
+    new MetricsLogger(name = cluster.selfAddress.port.getOrElse(0).toString())
+  private[this] val clusterHeapMetrics = new ClusterHeapMetrics()
 
   private var consumers: Set[String] = HashSet.empty
 
@@ -37,8 +39,10 @@ class ClusterListener(metricsIntervalSeconds: Int) extends Actor {
       clusterMetrics
         .filter(nm => consumers.contains(nm.address.hostPort))
         .foreach(updateHeapUse(_))
-    case "logConsumersHeapUse" =>
-      clusterHeapMetrics.logHeapUse()
+    case "logConsumersHeapUse" => {
+      metricsLogger.log(clusterHeapMetrics.calculateNodesHeapUseAvgs)
+      clusterHeapMetrics.clear()
+    }
   }
 
   private[this] def updateHeapUse(nodeMetrics: NodeMetrics) {
