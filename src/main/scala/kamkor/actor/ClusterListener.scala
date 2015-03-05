@@ -40,7 +40,7 @@ class ClusterListener(metricsIntervalSeconds: Int) extends Actor {
         .filter(nm => consumers.contains(nm.address.hostPort))
         .foreach(updateHeapUse(_))
     case "logConsumersHeapUse" => {
-      metricsLogger.log(clusterHeapMetrics.calculateNodesHeapUseAvgs)
+      metricsLogger.log(clusterHeapMetrics.calculateAverages)
       clusterHeapMetrics.clear()
     }
   }
@@ -49,7 +49,7 @@ class ClusterListener(metricsIntervalSeconds: Int) extends Actor {
     nodeMetrics match {
       case HeapMemory(address, timestamp, used, committed, max) => {
         val usedMB = Math.round(used.doubleValue / 1024 / 1024)
-        clusterHeapMetrics.updateHeapUse(address.hostPort, usedMB)
+        clusterHeapMetrics.update(address.hostPort, usedMB)
       }
       case _ => // no heap info
     }

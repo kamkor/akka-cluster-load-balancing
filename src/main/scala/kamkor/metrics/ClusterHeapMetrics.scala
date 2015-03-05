@@ -11,7 +11,7 @@ class ClusterHeapMetrics() {
   private[this] var nodesHeapUse: TreeMap[String, Seq[Long]] = TreeMap.empty
 
   /** Updates heap use statistics for node with nodeAddress */
-  def updateHeapUse(nodeAddress: String, usedMB: Long): Unit = {
+  def update(nodeAddress: String, usedMB: Long): Unit = {
     val updatedHeapUse = nodesHeapUse.getOrElse(nodeAddress, Seq.empty) :+ usedMB
     nodesHeapUse += nodeAddress -> updatedHeapUse
   }
@@ -22,7 +22,7 @@ class ClusterHeapMetrics() {
    * @return current average heap use in mb for each node in the metrics:
    * node_1_avgheapuse,node_2_avgheapuse,..,node_n_avgheapuse
    */
-  def calculateNodesHeapUseAvgs: Iterable[Long] =
+  def calculateAverages: Iterable[Long] =
     nodesHeapUse.values map (nHeapUse => if (nHeapUse.isEmpty) 0 else nHeapUse.sum / nHeapUse.length)
 
   def clear(): Unit =
