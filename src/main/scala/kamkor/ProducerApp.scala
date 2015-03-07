@@ -16,7 +16,7 @@ object ProducerApp {
 
     val sendIntervalMillis = config.getInt("producer.send-interval-millis")
     val dataArraySize = config.getInt("producer.data-array-size")
-    val producer = system.actorOf(Producer.props(sendIntervalMillis, dataArraySize), name = "producer")
+    system.actorOf(Producer.props(sendIntervalMillis, dataArraySize), name = "producer")
   }
 
 }

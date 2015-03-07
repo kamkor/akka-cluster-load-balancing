@@ -32,7 +32,7 @@ class ConsumerSpec(_system: ActorSystem)
 
       // akka scheduling is not 100% accurate http://doc.akka.io/docs/akka/snapshot/scala/scheduler.html
       within(999.millis, 1300.millis) {
-        EventFilter.debug(pattern = "endedProcessing", occurrences = 5) intercept {
+        EventFilter.debug(pattern = "endProcessing", occurrences = 5) intercept {
           for (_ <- 0 until 5) {
             consumer ! data
           }

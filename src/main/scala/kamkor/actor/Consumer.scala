@@ -17,7 +17,7 @@ class Consumer(val processingTimeMillis: Int) extends Actor with UnboundedStash 
   def processing: Receive = {
     case data: Array[Int] => stash()
     case "endProcessing" => {
-      log.debug("endedProcessing") // for testing
+      log.debug("endProcessing") // for unit test
       unstashAll()
       context.unbecome()
     }
