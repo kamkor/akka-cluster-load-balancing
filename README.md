@@ -1,7 +1,9 @@
 # akka-cluster-load-balancing
 Example producer consumer(s) application that shows how Akka routing can be used to balance the load of the nodes in an Akka Cluster.
 
-Description available at [blog.kamkor.me](http://blog.kamkor.me/Akka-Cluster-Load-Balancing/)
+![diagram](http://blog.kamkor.me/images/Akka-Cluster-Load-Balancing/diagram.png)
+
+Full description available at [blog.kamkor.me](http://blog.kamkor.me/Akka-Cluster-Load-Balancing/)
 
 The easiest way to run the example application is to download [akka-cluster-load-balancing-assembly-1.0.zip](https://github.com/kamkor/akka-cluster-load-balancing/releases/tag/master). It contains windows scripts that can run the application with the same setup as in this post. Customize the scripts to change:
 
