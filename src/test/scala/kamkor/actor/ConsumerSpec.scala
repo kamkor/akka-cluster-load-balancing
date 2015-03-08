@@ -25,7 +25,7 @@ class ConsumerSpec(_system: ActorSystem)
 
   override def afterAll: Unit = TestKit.shutdownActorSystem(system)
 
-  "A Customer actor that processes 1 message for 200 millis" must {
+  "A Customer actor that processes 1 message for 200 millis and receives 5 of them" must {
     "log endedProcessing with debug level 5 times within 1-1.3 seconds" in {
       val consumer = system.actorOf(Consumer.props(processingTimeMillis = 200))
       val data: Array[Int] = Array(0, 1, 2)
