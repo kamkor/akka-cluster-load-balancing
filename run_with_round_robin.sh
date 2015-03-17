@@ -1,3 +1,8 @@
+#!/bin/sh
+if [ ! -f target/scala-2.11/akka-cluster-load-balancing-assembly-1.0.jar ];then
+	echo "There is no 'target/scala-2.11/akka-cluster-load-balancing-assembly-1.0.jar' file ,please run 'sbt assembly' first"
+	exit 0
+fi
 # producer that sends 10 msg / [s] - send every 100 ms, hostname 127.0.0.1, port 2555, seednode 127.0.0.1:2555, config application_round_robin_router.conf
 sh producer.sh 100 127.0.0.1 2555 127.0.0.1:2555 application_round_robin_router.conf
 # consumer that receives max. 4 msg / [s], processing time 250 ms, hostname 127.0.0.1, port 2556, seednode 127.0.0.1:2555, config application_round_robin_router.conf
