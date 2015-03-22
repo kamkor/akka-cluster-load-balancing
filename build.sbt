@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).
 
     version := "1.0",
 
-    scalaVersion := "2.11.5",
+    scalaVersion := "2.11.6",
 
     name := "akka-cluster-load-balancing",
 
